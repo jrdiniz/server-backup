@@ -10,7 +10,7 @@
 
 ``` source env/bin/activate ```
 
-``` pip install -r requeriments.txt ``` 
+``` pip install -r requirements.txt ``` 
 
 ## Create .env file with credentials
 
@@ -52,7 +52,6 @@ deactivate
 
 ```
 
+``` chmod +x /path/to/run.sh ```
 
-```chmod +x /path/to/run.sh ```
-
-``` 23 59 * * * <full_path/env/bin/python3 backup-mysql.py ```
+``` 59 23 * * * <full_path/run.sh ```

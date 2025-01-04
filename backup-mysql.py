@@ -43,7 +43,7 @@ def main():
         subprocess.call(f"mysqldump -h {mysql_address} -u {mysql_user} -p{mysql_password} {database} > {backup_file}", shell=True)
         
         # Compress dump with gzip
-        compress_file(backup_file, f'{backup_file}.gz')
+        gzip_compress_file(backup_file, f'{backup_file}.gz')
         
         # Logging remove dump .sql
         logging.info(f'Removing dump file {backup_file}')
@@ -69,7 +69,7 @@ def main():
             logging.info(f'Local backup file for database {database} not removed, dump file {backup_file}.')
             
     
-def compress_file(input_file, output_file):
+def gzip_compress_file(input_file, output_file):
     with open(input_file, 'rb') as f_in:
         with gzip.open(output_file, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
