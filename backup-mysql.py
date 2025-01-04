@@ -10,8 +10,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Determine full logging file path
+abspath = os.path.abspath(os.path.dirname(__file__))
+
 # Logging
-logging.basicConfig(filename='backup-mysql.log', filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.INFO)
+logging.basicConfig(filename=f'{abspath}/server-backup.log', filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%m-%Y %H:%M:%S', level=logging.INFO)
 
 def main():
     # MySQL Credentials
