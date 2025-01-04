@@ -46,7 +46,7 @@ def main():
         logging.info(f'Removing dump file {backup_file}')
         
         # Uplaod to S3
-        if upload_to_s3(f'{backup_file}.gz', os.environ.get('PROJECT_NAME'), 'db', f'{database}_{str(timestamp)}.sql.gz'):
+        if upload_to_s3(f'{backup_file}.gz', 'db', f'{database}_{str(timestamp)}.sql.gz'):
             # Remove dump .sql
             os.remove(backup_file)
             
@@ -72,7 +72,7 @@ def compress_file(input_file, output_file):
             shutil.copyfileobj(f_in, f_out)
             
             
-def upload_to_s3(local_file, s3_file):
+def upload_to_s3(local_file, subdirectory, s3_file):
     s3 = boto3.client(
         's3',
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
@@ -81,9 +81,9 @@ def upload_to_s3(local_file, s3_file):
         region_name='auto'
     )
     try:
-        s3.upload_file(local_file, os.environ.get('AWS_BUCKET_NAME'), f"db/{s3_file}")
+        s3.upload_file(local_file, os.environ.get('AWS_BUCKET_NAME'), f"{subdirectory}/{s3_file}")
         # Logging Upload Successful
-        logging.info(f'Upload Successful: {local_file} to {os.environ.get("AWS_BUCKET_NAME")}/db/{s3_file}')
+        logging.info(f'Upload Successful: {local_file} to {os.environ.get("AWS_BUCKET_NAME")}/{subdirectory}/{s3_file}')
         return True
     except FileNotFoundError:
         # Logging File not found
