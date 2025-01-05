@@ -26,6 +26,9 @@ AWS_SECRET_ACCESS_KEY=
 AWS_ENDPOINT_URL=
 AWS_BUCKET_NAME=
 
+WEBPOINT_ROOT_DIRECTORY=/u/htdocs/webpoint
+WEBPOINT_IGNORE_LIST=<directory_1>,<directory_2>
+
 ```
 
 ## Backup MySQL
