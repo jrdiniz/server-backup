@@ -48,6 +48,7 @@ Create run.sh script
 #!/bin/bash
 source /path/to/your/venv/bin/activate
 python /path/to/your/backup-mysql.py
+python /path/to/your/backup-webpoint.py
 deactivate
 
 ```

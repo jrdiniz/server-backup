@@ -24,7 +24,8 @@ def main():
     # Get a list of directories in the webpoint root directory
     webpoints = os.listdir(webpoint_root_directory)
     
-    ignore_list = ['.tmp', '.session']
+    # Get a list of directories to ignore
+    ignore_list = os.getenv("WEBPOINT_IGNORE_LIST").split(',')
     
     for webpoint in webpoints:
         # Logging starting webpoint backup script
