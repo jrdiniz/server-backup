@@ -40,6 +40,9 @@ def main():
         # Create backup file using tar
         create_tarfile(f'{webpoint_root_directory}/{webpoint}', f'{webpoint}_{str(timestamp)}.tar.gz', ignore_list)
         
+        # Sync to S3
+        #sync_to_s3(f'{webpoint_root_directory}/{webpoint}', os.getenv('AWS_BUCKET_NAME'), webpoint)
+        
         # Uplaod to S3
         if upload_to_s3(f'{webpoint}_{str(timestamp)}.tar.gz', 'webpoint', f'{webpoint}_{str(timestamp)}.tar.gz'):
             # Logging backup file for webpoint created
@@ -87,6 +90,31 @@ def upload_to_s3(local_file, subdirectory, s3_file):
         # Logging Error
         logging.error(f'Error: {str(e)}')
         return False
+
+def sync_to_s3(local_dir, bucket_name, s3_prefix=""):
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        endpoint_url=os.environ.get('AWS_ENDPOINT_URL'),
+        region_name='auto'
+    )
+
+    for root, dirs, files in os.walk(local_dir):
+        for file in files:
+            local_path = os.path.join(root, file)
+            relative_path = os.path.relpath(local_path, local_dir)
+            s3_path = os.path.join(s3_prefix, relative_path).replace("\\", "/")
+
+            try:
+                print(f"Uploading {local_path} to s3://{bucket_name}/{s3_path}")
+                s3.upload_file(local_path, bucket_name, s3_path)
+            except S3UploadFailedError as e:
+                print(f"❌ Upload failed for {local_path}: {e}")
+                continue
+            except NoCredentialsError:
+                print("🔐 AWS credentials not available. Exiting...")
+                return
 
 
 if __name__ == '__main__':
